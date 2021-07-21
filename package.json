@@ -11,6 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "colors": "^1.4.0",
-    "nodemon": "^2.0.12"
+    "inquirer": "^8.1.2",
+    "nodemon": "^2.0.12",
+    "uuid": "^8.3.2"
   }
 }
