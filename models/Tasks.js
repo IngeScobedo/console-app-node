@@ -8,8 +8,8 @@ class Tasks {
     let list = [];
 
     Object.keys(this._list).forEach((key) => {
-      const { description, completed } = this._list[key];
-      list.push({ description, completed });
+      const task = this._list[key];
+      list.push(task);
     });
 
     return list;
@@ -18,60 +18,56 @@ class Tasks {
   constructor() {
     this._list = {};
   }
-  printTasks() {
-    let taskArray = [
-      {
-          value: '1',
-          name: `${'1.-'.red.bold} ${'Create Task'.green.bold}`
-      },
-      {
-          value: '2',
-          name: `${'2.-'.red.bold} ${'Show Tasks'.green.bold}`
-      },
-      {
-          value: '3',
-          name: `${'3.-'.red.bold} ${'Show Completed Tasks'.green.bold}`
-      },
-      {
-          value: '4',
-          name: `${'4.-'.red.bold} ${'Show Pending Tasks'.green.bold}`
-      },
-      {
-          value: '5',
-          name: `${'5.-'.red.bold} ${'Complete Tasks'.green.bold}`
-      },
-      {
-          value: '6',
-          name: `${'6.-'.red.bold} ${'Delete Tasks'.green.bold}`
-      },
-      {
-          value: '0',
-          name: `${'0.-'.red.bold} ${'Exit'.green.bold}`
-      }
-  ];
-    let choices = 
-    [
-      {
-        type: 'list',
-        name: 'taskSelected',
-        message: `${"U can select a task to primary task\n".inverse}`,
-        
-      }
-    ];
 
-    this.listArr.forEach((o, i) => {
-      console.log(`${i + 1}- ${o.description} - ${o.completed}`);
-    });
+  createTasks(description = "", completed = false, date = "22/05/2002") {
+    const task = new Task(description, completed, date);
+
+    this._list[task.id] = task;
+  }
+
+  deleteTasks(id = ''){
+    if (this._list[id]){
+      delete this._list[id];
+    }
   }
 
   loadTasks = (tasks = []) => {
     tasks.forEach((task) => (this._list[task.id] = task));
   };
 
-  createTasks(description = "") {
-    const task = new Task(description);
+  printTasks() {
+    this.listArr.forEach(({ description, completed }, i) => {
+      completed ? (completed = "Completed".green) : (completed = "Pending".red);
 
-    this._list[task.id] = task;
+      let index = `${i + 1}.`.yellow.inverse;
+
+      console.log(`${index} ${description} :: ${completed}`);
+    });
+  }
+
+  filteredTasks(bool) {
+    let result;
+    bool
+      ? (result = this.listArr.filter((task) => task.completed === true))
+      : (result = this.listArr.filter((task) => task.completed === false));
+    result.forEach(({ description, date }, index) => {
+      let i = `${index + 1}`.blue;
+      console.log(`${i}. ${description} ${'::'.yellow} ${date}`);
+    });
+  }
+
+  printLists(option) {
+    switch (option) {
+      case "all":
+        this.printTasks();
+        break;
+      case "completed":
+        this.filteredTasks(true);
+        break;
+      case "pending":
+        this.filteredTasks(false);
+        break;
+    }
   }
 }
 
