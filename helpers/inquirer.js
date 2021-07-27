@@ -106,8 +106,42 @@ const listToDelete = async (task) => {
   ];
 
   let { id } = await inquirer.prompt(questions);
+
   return id;
 };
+
+const listToComplete = async (task) => {
+  let choices = task.map(({ id, description, date, completed }, i) => {
+    let idx = `${i + 1}.`.red;
+    return {
+      value: id,
+      name: description,
+      checked: (completed)
+              ? true
+              : false
+    };
+  });
+
+  /* choices.unshift({
+      value: 0,
+      name: '0.'.green + ' Cancelar'
+  }) */
+
+  let questions = [
+    {
+      type: "checkbox",
+      name: "ids",
+      message: "Select an item",
+      choices,
+    },
+  ];
+
+  let { ids } = await inquirer.prompt(questions);
+  return ids;
+};
+
+
+
 
 const confirm = async (message) => {
     let question = [
@@ -128,5 +162,6 @@ module.exports = {
   pause,
   readInput,
   listToDelete,
-  confirm
+  confirm,
+  listToComplete,
 };

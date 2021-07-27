@@ -19,14 +19,14 @@ class Tasks {
     this._list = {};
   }
 
-  createTasks(description = "", completed = false, date = "22/05/2002") {
+  createTasks(description = "", completed = false, date = null) {
     const task = new Task(description, completed, date);
 
     this._list[task.id] = task;
   }
 
-  deleteTasks(id = ''){
-    if (this._list[id]){
+  deleteTasks(id = "") {
+    if (this._list[id]) {
       delete this._list[id];
     }
   }
@@ -50,9 +50,10 @@ class Tasks {
     bool
       ? (result = this.listArr.filter((task) => task.completed === true))
       : (result = this.listArr.filter((task) => task.completed === false));
-    result.forEach(({ description, date }, index) => {
+    result.forEach(({ description, date, completed }, index) => {
+      completed ? (date = new Date().toISOString()) : (date = "pending".red);
       let i = `${index + 1}`.blue;
-      console.log(`${i}. ${description} ${'::'.yellow} ${date}`);
+      console.log(`${i}. ${description} ${"::".yellow} ${date}`);
     });
   }
 
@@ -69,6 +70,27 @@ class Tasks {
         break;
     }
   }
+
+  toggleStatus = (ids = []) => {
+
+
+
+    ids.forEach((id) => {
+      let task = this._list[id];
+      if (!task.date) {
+        task.completed = true;
+        task.date = new Date().toISOString();
+      }
+      this.listArr.forEach(({ id },i) => {
+        if (!ids.includes(id)) {
+          console.log(ids.length);
+          const task = this._list[id];
+          task.completed = false;
+          task.date = null;
+        }
+      });
+    });
+  };
 }
 
 module.exports = Tasks;
